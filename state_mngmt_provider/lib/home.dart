@@ -26,21 +26,45 @@ class BreadCrumb {
   String get title => name + (isActive ? ' > ' : '');
 }
 
-class breadCrumbProvider extends ChangeNotifier{
-  final List<BreadCrumb> _items=[];
+class BreadCrumbProvider extends ChangeNotifier {
+  final List<BreadCrumb> _items = [];
   UnmodifiableListView<BreadCrumb> get item => UnmodifiableListView(_items);
 
-  void add(BreadCrumb breadCrumb){
-    for (final item in _items){
+  void add(BreadCrumb breadCrumb) {
+    for (final item in _items) {
       item.activate();
     }
     _items.add(breadCrumb);
     notifyListeners();
   }
 
-  void reset(){
+  void reset() {
     _items.clear();
     notifyListeners();
+  }
+}
+
+class BreadCrumbsWidget extends StatelessWidget {
+  final UnmodifiableListView<BreadCrumb> breadCrumbs;
+  const BreadCrumbsWidget({
+    super.key,
+    required this.breadCrumbs,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: breadCrumbs.map(
+        (breadCrumb) {
+          return Text(
+            breadCrumb.title,
+            style: TextStyle(
+              color: breadCrumb.isActive ? Colors.blue : Colors.black,
+            ),
+          );
+        },
+      ).toList(),
+    );
   }
 }
 
